@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="ShiftMapper">
+	
+	<!-- 获取parentid=?的数据  顶层获取 -->
+	<select id="selectByParentid" parameterType="pd" resultType="com.yangzi.fullR.entity.vo.FRShift">
+         select * from FR_Shift WHERE 	
+         Parent_Id=#{parentid} 
+         <if test="shiftName != null and shiftName !=''">
+         AND ShiftName like '%'+#{shiftName}+'%'
+         </if>
+         Order By ShiftOrder 
+	</select>
+	
+	
+	<select id="getShiftById" parameterType="pd" resultType="pd">
+	   select * from FR_Shift where ShiftID=#{shiftId}
+	</select>
+	
+	
+	<select id="getAllStatus" parameterType="pd" resultType="pd">
+	   select ShiftID,ShiftName from FR_Shift WHERE Status=#{status} AND ShiftLevel=1
+	</select>
+	
+	<select id="getDataByCons" parameterType="Integer" resultType="pd">
+	   select * from FR_Shift WHERE Status=0 
+	   AND Parent_Id=#{shiftID}
+	   AND ShiftLevel=2 
+	</select>
+	
+	
+	<!-- 插入操作 -->
+	 <insert id="saveSf" parameterType="pd">
+	   insert into FR_Shift(
+	   ShiftName,
+	   Comment,
+	   ShiftValueType,
+	   ShiftOrder,
+	   StartTime,
+	   IsWorkTime,
+	   IsWorkAttendance,
+	   EndTime,
+	   Parent_Id,
+	   ShiftLevel,
+	   Status,
+	   CrossDayType
+	  )values(
+       #{shiftName},
+       #{comment},
+       #{shiftValueType},
+       #{shiftOrder},
+       #{startTime},
+       #{isWorkTime},
+       #{isWorkAttendance},
+       #{endTime},
+       #{parent_Id},
+       #{shiftLevel},   	
+       #{status},
+       #{crossDayType}	
+	   )
+	 </insert>
+	 
+	 
+	 <delete id="deleleR" parameterType="String">
+	    delete from FR_Shift where ShiftID =#{shiftId}
+	    or Parent_Id=#{shiftId}
+	 </delete>
+	 
+	 
+	 <update id="updateS" parameterType="com.yangzi.fullR.entity.vo.FRShift">
+	      update FR_Shift set
+	        ShiftName=#{shiftName},
+	        ShiftValueType=#{shiftValueType},
+	        ShiftOrder=#{shiftOrder},
+	        StartTime=#{startTime},
+	        IsWorkTime=#{isWorkTime},
+	        IsWorkAttendance=#{isWorkAttendance},
+	        EndTime=#{endTime},
+	        Parent_Id=#{parent_Id},
+	        ShiftLevel=#{shiftLevel},
+	        CrossDayType=#{crossDayType},
+	        Status=#{status}
+	        WHERE 
+	        ShiftID=#{shiftId}
+	 
+	 </update>
+	 
+	 
+	 
+	</mapper>

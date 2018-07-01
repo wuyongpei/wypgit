@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FREmpMapper">
+	<resultMap id="userAndRoleResultMap" type="FREmp">
+		<id column="Emp_ID" property="Emp_ID" />
+		<result column="Emp_Name" property="Emp_Name" />
+		<result column="Pass_Word" property="Pass_Word" />
+		<result column="E_Name" property="E_Name" />
+		<result column="Rights" property="Rights" />
+		<result column="Last_Login" property="Last_Login" />
+		<result column="Ip" property="Ip" />
+		<result column="Status" property="Status" />
+		<result column="Skin" property="Skin" />
+		<result column="WorkUnitID" property="WorkUnitID" />
+		<association property="role" column="Role_ID" javaType="Role">
+			<id column="Role_ID" property="role_ID" />
+			<result column="Role_Name" property="role_Name" />
+			<result column="ROLE_RIGHTS" property="rights" />
+		</association>
+	</resultMap>
+
+	<resultMap id="userResultMap" type="FREmp">
+		<id column="Emp_ID" property="Emp_ID" />
+		<result column="Emp_Name" property="Emp_Name" />
+		<result column="Pass_Word" property="Pass_Word" />
+		<result column="E_Name" property="E_Name" />
+		<result column="Rights" property="Rights" />
+		<result column="Last_Login" property="Last_Login" />
+		<result column="Ip" property="Ip" />
+		<result column="Status" property="Status" />
+		<result column="Skin" property="Skin" />
+	</resultMap>
+
+	<select id="listAllUsers" resultMap="userResultMap">
+		select * from FR_Emp
+	</select>
+
+    
+    <select id="getDocEmpListByWuID" parameterType="String" resultType="pd">
+       select * from FR_Emp where
+       
+    
+    </select>
+    
+    
+    
+    	<select id="getUserAndRoleById" parameterType="String" resultMap="userAndRoleResultMap">
+		select  u.Emp_ID,
+				u.Emp_Name,
+				u.E_Name,
+				u.Rights as USER_RIGHTS,
+				u.Pass_Word,
+				u.Skin,
+				u.WorkUnitID,
+				r.Role_ID,
+				r.Role_Name,
+				r.Rights as ROLE_RIGHTS 
+		from FR_Emp u 
+		left join FR_Role r 
+		on u.Role_ID=r.Role_ID 
+		where u.Status=0 
+		and u.Emp_ID=#{USER_ID} 
+	</select>
+
+
+</mapper>

@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="WorkPositionMapper">
+	<resultMap type="com.yangzi.fullR.entity.WorkUnit" id="workUnitResultMap">
+		<id column="WorkUnitID" property="workUnitID" />
+		<result column="WorkUnitCode" property="workUnitCode" />
+		<result column="WorkUnitName" property="workUnitName" />
+		<result column="NameSpell" property="nameSpell" />
+		<result column="ShortName" property="shortName" />
+		<result column="Telphone" property="telphone" />
+		<result column="Address" property="address" />
+		<result column="URL" property="uRL" />
+		<result column="Email" property="email" />
+		<result column="Linkman" property="linkman" />
+		<result column="LinkmanTelphone" property="linkmanTelphone" />
+		<result column="LinkmanEmail" property="linkmanEmail" />
+		<result column="CreateDateTime" property="createDateTime" />
+		<result column="Comment" property="comment" />
+		<result column="Status" property="status" />
+		<collection property="officeList" ofType="com.yangzi.fullR.entity.Office">
+			<id column="OfficeID" property="officeID" />
+			<result column="OfficeCode" property="officeCode" />
+			<result column="OfficeName" property="officeName" />
+			<result column="NameSpell" property="ospell" />
+			<result column="OfficeSort" property="officeSort" />
+			<result column="OfficeLevel" property="officeLevel" />
+			<result column="WorkUnitID" property="wuid" />
+			<result column="Comment" property="ofcom" />
+			<result column="Status" property="ostatus" />
+			<result column="OfficeType" property="officeType" />
+			<collection property="workPList"
+				ofType="com.yangzi.fullR.entity.WorkPosition">
+				<id column="WorkPositionID" property="workPositionID" />
+				<result column="WorkPositionName" property="workPositionName" />
+				<result column="NameSpell" property="wnsell" />
+				<result column="WorkPositionCode" property="workPositionCode" />
+				<result column="OfficeID" property="ofID" />
+				<result column="Comment" property="wcomment" />
+				<result column="Status" property="wstatus" />
+			</collection>
+		</collection>
+	</resultMap>
+
+	<!-- <resultMap type="com.yangzi.fullR.entity.Office" id="officeResultMap"> -->
+	<!-- <id column="OfficeID" property="officeID"/> -->
+	<!-- <result column="OfficeCode" property="officeCode"/> -->
+	<!-- <result column="OfficeName" property="officeName"/> -->
+	<!-- <result column="NameSpell" property="nameSpell"/> -->
+	<!-- <result column="OfficeSort" property="officeSort"/> -->
+	<!-- <result column="OfficeLevel" property="officeLevel"/> -->
+	<!-- <result column="WorkUnitID" property="workUnitID"/> -->
+	<!-- <result column="Status" property="status"/> -->
+	<!-- </resultMap> -->
+
+	<!-- <resultMap type="com.yangzi.fullR.entity.WorkPosition" id="workPositionResultMap"> -->
+	<!-- <id column="WorkPositionID" property="workPositionID"/> -->
+	<!-- <result column="WorkPositionName" property="workPositionName"/> -->
+	<!-- <result column="WorkPositionCode" property="workPositionCode"/> -->
+	<!-- <result column="NameSpell" property="nameSpell"/> -->
+	<!-- <result column="OfficeID" property="officeID"/> -->
+	<!-- <result column="Comment" property="comment"/> -->
+	<!-- <result column="Status" property="status"/> -->
+	<!-- </resultMap> -->
+
+	<select id="workUnitList" resultType="pd" useCache="false">
+		select
+		WorkUnitID,WorkUnitName FROM FR_WorkUnit WHERE Status =0
+	</select>
+
+
+
+	<!-- 获取所有可用的工作单位 -->
+	<select id="workUnitlistPage" parameterType="page" resultMap="workUnitResultMap"
+		useCache="false">
+		select u.*,
+		o.OfficeID,
+		o.OfficeCode,
+		o.OfficeName,
+		o.NameSpell
+		ospell,
+		o.OfficeSort,
+		o.OfficeLevel,
+		o.WorkUnitID wuid,
+		o.Status ostatus,
+		w.WorkPositionID,
+		w.WorkPositionName,
+		w.WorkPositionCode,
+		w.NameSpell
+		wnsell,
+		w.OfficeID ofID,
+		w.Comment wcomment,
+		w.Status wstatus
+		from
+		FR_WorkUnit u LEFT JOIN FR_Office o ON o.WorkUnitID=u.WorkUnitID LEFT
+		JOIN FR_WorkPosition w
+		on w.OfficeID=o.OfficeID
+	</select>
+
+	<select id="countWorkPosition" resultType="Integer">
+		select count(*) from
+		FR_WorkPosition
+	</select>
+
+	<select id="countOffice" resultType="Integer">
+		select count(*) from
+		FR_Office
+	</select>
+
+	<select id="getWorkUnitNameByID" parameterType="String" resultType="String">
+		select WorkUnitName from FR_WorkUnit where WorkUnitID=#{WorkUnitID}
+	</select>
+
+	<insert id="insertWu" parameterType="com.yangzi.fullR.entity.WorkUnit">
+		insert into FR_WorkUnit(
+		WorkUnitID,
+		WorkUnitCode,
+		WorkUnitName,
+		NameSpell,
+		ShortName,
+		Telphone,
+		Address,
+		URL,
+		Email,
+		Linkman,
+		LinkmanTelphone,
+		LinkmanEmail,
+		CreateDateTime,
+		Comment,
+		Status
+		) values (
+		#{workUnitID},
+		#{workUnitCode},
+		#{workUnitName},
+		#{nameSpell},
+		#{shortName},
+		#{telphone},
+		#{address},
+		#{uRL},
+		#{email},
+		#{linkman},
+		#{linkmanTelphone},
+		#{linkmanEmail},
+		#{createDateTime,jdbcType=TIMESTAMP},
+		#{comment},
+		#{status}
+		)
+	</insert>
+	<insert id="insertOf" parameterType="com.yangzi.fullR.entity.Office">
+		insert into FR_Office(
+		OfficeCode,
+		OfficeName,
+		NameSpell,
+		OfficeSort,
+		OfficeLevel,
+		WorkUnitID,
+		Comment,
+		Status,
+		OfficeType
+		)values(
+		#{officeCode},
+		#{officeName},
+		#{ospell},
+		#{officeSort},
+		#{officeLevel},
+		#{wuid},
+		#{ofcom},
+		#{ostatus},
+		#{officeType}
+		)
+	</insert>
+
+	<insert id="insertWp" parameterType="com.yangzi.fullR.entity.WorkPosition">
+		insert into FR_WorkPosition(
+		WorkPositionName,
+		WorkPositionCode,
+		NameSpell,
+		OfficeID,
+		Comment,
+		Status
+		)values(
+		#{workPositionName},
+		#{workPositionCode},
+		#{wnsell},
+		#{ofID},
+		#{wcomment},
+		#{wstatus}
+		)
+	</insert>
+
+
+	<select id="findWuById" parameterType="pd" resultType="pd">
+		select
+		WorkUnitID,
+		WorkUnitCode,
+		WorkUnitName,
+		NameSpell,
+		ShortName,
+		Telphone,
+		Address,
+		URL,
+		Email,
+		Linkman,
+		LinkmanTelphone,
+		LinkmanEmail,
+		CreateDateTime,
+		Comment,
+		Status
+		from FR_WorkUnit where WorkUnitID
+		=#{workUnitID}
+	</select>
+
+
+	<select id="findOfById" parameterType="pd" resultType="pd">
+		select *
+		from FR_Office where OfficeID =#{officeID}
+	</select>
+
+
+	<select id="findWpById" parameterType="pd" resultType="pd">
+		select
+		w.WorkPositionID,
+		w.WorkPositionName,
+		w.WorkPositionCode,
+		w.NameSpell,
+		w.Comment,
+		w.Status,
+		o.OfficeID,
+		o.WorkUnitID
+		from FR_WorkPosition w
+		,FR_Office o
+		where w.OfficeID = o.OfficeID And
+		w.WorkPositionID=#{workPositionID}
+	</select>
+
+	<select id="findOflistByWuId" parameterType="pd" resultType="pd">
+		select OfficeID,OfficeName from FR_Office where WorkUnitID=#{wuid}
+	</select>
+	<select id="findOfStatuslistByWuId" parameterType="pd"
+		resultType="pd">
+		select OfficeID,OfficeName from FR_Office where
+		WorkUnitID=#{wuid} And
+		Status=0 And OfficeType =1
+	</select>
+
+
+	<select id="findWplistByOfId" parameterType="pd" resultType="pd">
+		select WorkPositionID,WorkPositionName from FR_WorkPosition where
+		OfficeID=#{ofid}
+	</select>
+
+	<select id="getWorkPNameByPid" parameterType="Integer"
+		resultType="String">
+		select WorkPositionName from FR_WorkPosition WHERE
+		WorkPositionID=#{wpId}
+	</select>
+
+	<update id="updateWu" parameterType="com.yangzi.fullR.entity.WorkUnit">
+		update FR_WorkUnit set
+		WorkUnitName=#{workUnitName},
+		NameSpell=#{nameSpell},
+		ShortName=#{shortName},
+		Telphone=#{telphone},
+		Address=#{address},
+		URL=#{uRL},
+		Email=#{email},
+		Linkman=#{linkman},
+		LinkmanTelphone=#{linkmanTelphone},
+		LinkmanEmail=#{linkmanEmail},
+		Comment=#{comment},
+		Status=#{status}
+		Where
+		WorkUnitID=#{workUnitID}
+	</update>
+
+	<update id="updateOf" parameterType="com.yangzi.fullR.entity.Office">
+		update FR_Office set
+		OfficeCode=#{officeCode},
+		OfficeName=#{officeName},
+		NameSpell=#{ospell},
+		OfficeSort=#{officeSort},
+		OfficeLevel=#{officeLevel},
+		WorkUnitID=#{wuid},
+		Comment=#{ofcom},
+		Status=#{ostatus},
+		OfficeType=#{officeType}
+		where
+		OfficeID=#{officeID}
+	</update>
+	<update id="updateWp" parameterType="com.yangzi.fullR.entity.WorkPosition">
+		update FR_WorkPosition set
+		WorkPositionName =#{workPositionName},
+		WorkPositionCode=#{workPositionCode},
+		NameSpell=#{wnsell},
+		OfficeID=#{ofID},
+		Comment=#{wcomment},
+		Status=#{wstatus}
+		Where
+		WorkPositionID =#{workPositionID}
+	</update>
+
+
+	<!-- <delete id="delWu" parameterType="String"> -->
+	<!-- delete from FR_WorkUnit -->
+	<!-- WHERE WorkUnitID=#{wuId} -->
+	<!-- </delete> -->
+	<delete id="delOf" parameterType="String">
+		delete from FR_Office
+		WHERE
+		OfficeID=#{ofId}
+	</delete>
+
+	<delete id="delAllByOfId" parameterType="String">
+		delete from
+		FR_WorkPosition WHERE OfficeID=#{ofId}
+	</delete>
+
+	<delete id="delWP" parameterType="String">
+		delete from FR_WorkPosition
+		WHERE WorkPositionID=#{wpId}
+	</delete>
+
+
+
+
+
+
+
+</mapper>
+	
+	

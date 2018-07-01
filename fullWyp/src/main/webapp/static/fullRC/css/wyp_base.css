@@ -1,0 +1,253 @@
+.bb{
+	border-bottom: 1px solid #EEE;
+}
+.bt{
+	border-top: 1px solid #EEE;
+}
+.br{
+	border-right: 1px solid #EEE;
+}
+.border{
+	border:1px solid #6fb3e0 !important;
+}
+
+.borderE{
+	border:1px solid #EEE;
+}
+.bg00{
+	background-color: #009999;
+}
+.bgwhite{
+	background-color: white !important;
+}
+
+.cp{
+	cursor: pointer;
+}
+
+.cr{
+	color: red;
+}
+.cw{
+	color: white;
+}
+.cFF{
+	color:  #0000FF;
+}
+.cfff{
+	color: #fff;
+}
+.c333{
+	color:#333;
+}
+
+.dpib{
+	display: inline-block !important;
+	vertical-align: top;
+}
+.dpn{
+	display: none;
+}
+.dpb{
+	display: block!important;
+}
+
+.fs12{
+	font-size: 12px;
+}
+.fs14{
+	font-size: 14px;
+}
+.fs16{
+	font-size: 16px;
+}
+.fs20{
+	font-size: 20px
+}
+.fw600{
+	font-weight: 600;
+}
+.fw900{
+	font-weight: 900;
+}
+
+.h5b{
+	height: 5%;
+}
+.h10b{
+	height: 10%;
+}
+.h15b{
+	height: 15%;
+}
+.h60b{
+	height: 60%;
+}
+.h75b{
+	height: 75%;
+}
+.h80b{
+	height: 80%;
+}
+.h85b{
+	height: 85%;
+}
+.h90b{
+	height: 90%;
+}
+.h100b{
+	height: 100%;
+}
+.h30{
+	height: 30px!important;
+}
+.h34{
+	height: 34px !important;
+}
+.h42{
+	height: 42px!important;
+}
+.h50{
+	height: 50px;
+}
+.h500{
+	height: 500px;
+}
+
+li:hover{
+	color: white;
+}
+.lh30{
+	line-height: 30px;
+}
+
+
+.m0{
+	margin: 0px!important;
+}
+.m5{
+	margin: 5px;
+}
+.m10{
+	margin: 10px;
+}
+.mb30{
+	margin-bottom: 30px;
+}
+
+.ml17{
+	margin-left: 17px;
+}
+
+.mr_4{
+	margin-right: -4px;
+}
+.mr17{
+	margin-right: 17px;
+}
+.mt5{
+	margin-top: 5px;
+}
+.mt10{
+	margin-top: 10px;
+}
+.mt15{
+	margin-top: 15px;
+}
+.mt20{
+	margin-top: 20px;
+}
+.mt30{
+	margin-top: 30px;
+}
+
+.o08{
+	opacity: .80;
+}
+.o1{
+	opacity: 1.0;
+}
+
+.p0{
+	padding: 0px;
+	}
+.p16{
+	padding: 16px;
+}
+
+.pl0{
+	padding-left: 0px!important;
+}
+.pl15{
+	padding-left: 15px;
+}
+.pr15{
+	padding-right: 15px;
+}
+.pr17{
+	padding-right: 17px;
+}
+
+.pt5{
+	padding-top: 5px;
+}.pt10{
+	padding-top: 10px;
+}
+}.pt20{
+	padding-top: 20px;
+}
+
+.snone{
+	appearance:none;
+  -moz-appearance:none;
+  -webkit-appearance:none;
+}
+
+.tac{
+	text-align: center;
+}
+.tar{
+	text-align: right;
+}
+.tal{
+	text-align: left;
+}
+
+.w60{
+	width: 60px;
+}
+.w70{
+	width: 70px;
+}
+.w8{
+	width: 80%!important;
+}
+.w30b{
+	width: 30%;
+}
+.w50b{
+	width: 50%;
+}
+
+.w70b{
+	width: 70%;
+}
+.w100b{
+	width: 100%!important;
+}
+.w700{
+	width: 700px;
+}
+
+
+
+input[type=radio]{
+	position:static!important;
+	opacity: 1!important;
+}
+
+[type=checkbox] {
+	position:static!important;
+	opacity: 1!important;
+}
+

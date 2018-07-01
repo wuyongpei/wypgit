@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SettingsMapper">
+	<select id="getProcessSet" parameterType="String" resultType="pd">
+		select * from FR_Process_Set where WorkUnitID=#{WorkUnitID}
+	</select>
+
+	<select id="getVoiceIPRPage" parameterType="pd" resultType="pd">
+		select top ${pageSize} * from FR_Voice_IP_R where OfficeID in
+		<foreach collection="offices" item="OfficeID" index="index"
+			open="(" close=")" separator=",">
+			#{OfficeID}
+		</foreach>
+		<if test="pageStart!=null and pageStart!='0'">
+			and ID not in(
+			select top ${pageStart} ID from FR_Voice_IP_R where
+			OfficeID in
+			<foreach collection="offices" item="OfficeID" index="index"
+				open="(" close=")" separator=",">
+				#{OfficeID}
+			</foreach>
+			)
+		</if>
+	</select>
+
+	<select id="getVoiceIPRSize" parameterType="pd" resultType="java.lang.Integer">
+		select count(*) from FR_Voice_IP_R where OfficeID in
+		<foreach collection="offices" item="OfficeID" index="index"
+			open="(" close=")" separator=",">
+			#{OfficeID}
+		</foreach>
+	</select>
+
+	<update id="updateProcess" parameterType="pd">
+		update FR_Process_Set
+		set
+		CallModel=#{CallModel},
+		ProcessTypeModel=#{ProcessTypeModel},
+		AbstainedTicket=#{AbstainedTicket},
+		ObsoleteTime=#{ObsoleteTime}
+		where
+		ProcessSetID=#{ProcessSetID}
+	</update>
+
+	<update id="updateVoice" parameterType="pd">
+		update FR_Voice_IP_R set
+		OfficeID=#{OfficeID},
+		VoiceComputerIP=#{VoiceComputerIP},
+		Port=#{Port},
+		OfficeName=#{OfficeName}
+		where ID=#{ID}
+	</update>
+
+	<insert id="insertProcess" parameterType="pd">
+		insert into
+		FR_Process_Set (ProcessSetID,CallModel,ProcessTypeModel,AbstainedTicket,ObsoleteTime,WorkUnitID,WorkUnitName)
+		values (#{ProcessSetID},#{CallModel},#{ProcessTypeModel},#{AbstainedTicket},#{ObsoleteTime},#{WorkUnitID},#{WorkUnitName})
+	</insert>
+
+	<insert id="insertVoice" parameterType="pd">
+		insert into
+		FR_Voice_IP_R (OfficeID,VoiceComputerIP,Port,OfficeName)
+		values(#{OfficeID},#{VoiceComputerIP},#{Port},#{OfficeName})
+	</insert>
+
+	<delete id="deleteProcess" parameterType="pd">
+		delete from FR_Process_Set where ProcessSetID=#{ProcessSetID}
+	</delete>
+
+	<delete id="deleteVoice" parameterType="pd">
+		delete from FR_Voice_IP_R where ID=#{ID}
+	</delete>
+</mapper>

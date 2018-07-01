@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AppointmentMapper">
+
+
+
+	<select id="countByDateAndEmpID" parameterType="pd" resultType="Integer">
+		select count(*) from FR_Work_Appointment WHERE Emp_ID=#{DocTorID}
+		AND
+		Appointment_Date=#{DutyDate}
+	</select>
+
+
+	<select id="countByDateTimeCircle" parameterType="pd"
+		resultType="Integer">
+		select count(*) from FR_Work_Appointment
+		WHERE
+		Appointment_Date
+		=#{appointmentDate}
+		AND Appointment_Time &gt;=
+		#{startAppointTime}
+		AND
+		Appointment_Time &lt; #{endAppointTime}
+		<if test="OfficeID != null and OfficeID != ''">
+			and OfficeID =#{OfficeID}
+		</if>
+		<if test="Emp_ID != null and Emp_ID != ''">
+			and Emp_ID =#{Emp_ID}
+		</if>
+		<if test="Appointment_Type != null and Appointment_Type != ''">
+			and Appointment_Type =#{Appointment_Type}
+		</if>
+	</select>
+
+	<!-- 根据日期时间获取预约信息 -->
+	<select id="getAppByTime" parameterType="pd" resultType="pd">
+		select
+		a.*,s.Birthday,s.Sex,s.Age,s.MobileNO,s.WeChatNo,s.IDNumber,s.Profession,
+		s.MarriageState,s.Nation,s.Company,s.Address
+		from FR_Work_Appointment
+		a,FR_Sick_Patient s
+		WHERE a.Appointment_Date
+		=#{appointmentDate}
+		AND
+		a.Appointment_Time &gt;= #{startAppointTime}
+		AND a.Appointment_Time
+		&lt;= #{endAppointTime}
+		<if test="OfficeID != null and OfficeID != ''">
+			and a.OfficeID =#{OfficeID}
+		</if>
+		<if test="Emp_ID != null and Emp_ID != ''">
+			and a.OfficeID =#{OfficeID}
+		</if>
+		<if test="Appointment_Type != null and Appointment_Type != ''">
+			and a.Appointment_Type =#{Appointment_Type}
+		</if>
+		AND
+		a.PatientID=s.PatientID
+	</select>
+
+	<!-- 预约列表页面所需查询 wyp -->
+	<select id="getApplistPage" parameterType="page" resultType="pd">
+		select top 100 percent
+		a.*,s.Birthday,s.Sex,s.Age,s.MobileNO,s.WeChatNo,s.IDNumber,s.Profession,
+		s.MarriageState,s.Nation,s.Company,s.Address
+		from FR_Work_Appointment
+		a,FR_Sick_Patient s
+		<where>
+			<if test="pd.Emp_ID != null and pd.Emp_ID != ''">
+				and a.Emp_ID =#{pd.Emp_ID}
+			</if>
+			<if test="pd.fromDate != null and pd.fromDate != ''">
+				and a.Appointment_Date &gt;=#{pd.fromDate}
+			</if>
+			<if test="pd.toDate != null and pd.toDate != ''">
+				and a.Appointment_Date &lt;=#{pd.toDate}
+			</if>
+			<if test="pd.fromTime != null and pd.fromTime != ''">
+				and a.CreateDateTime &gt;=#{pd.fromTime}
+			</if>
+			<if test="pd.toTime != null and pd.toTime != ''">
+				and a.CreateDateTime &lt;=#{pd.toTime}
+			</if>
+			<if test="pd.OfficeID != null and pd.OfficeID != ''">
+				and a.OfficeID =#{pd.OfficeID}
+			</if>
+			<if test="pd.Appointment_Type != null and pd.Appointment_Type != ''">
+				and a.Appointment_Type =#{pd.Appointment_Type}
+			</if>
+			<if test="pd.AppointmentStatus != null and pd.AppointmentStatus != ''">
+				and a.AppointmentStatus =#{pd.AppointmentStatus}
+			</if>
+			<if test="pd.PatientName != null and pd.PatientName != ''">
+				and a.PatientName like '%'+#{pd.PatientName}+'%'
+			</if>
+			and a.PatientID=s.PatientID ORDER BY
+			a.AppointmentStatus,a.CreateDateTime
+			DESC
+		</where>
+	</select>
+
+	<!-- 根据病人ID查询所有预约信息 wyp -->
+	<select id="getAppByPatientlistPage" parameterType="page"
+		resultType="pd">
+		select top 100 percent * from FR_Work_Appointment where
+		PatientID=#{pd.PatientID} order by AppointmentStatus,CreateDateTime
+		DESC
+	</select>
+
+	<!-- 根据医生跟预约信息获取已预约的时间-wyp -->
+	<select id="getTimes" parameterType="pd" resultType="String">
+		select
+		Appointment_Time from FR_Work_Appointment where
+		Emp_ID=#{Emp_ID} and
+		Appointment_Date=#{Appointment_Date}
+		ORDER BY Appointment_Time
+	</select>
+
+	<!-- 判断该医生的该时间额号是否被预约-wyp -->
+	<select id="countTime" parameterType="pd" resultType="Integer">
+		select
+		count(*) from FR_Work_Appointment where
+		Emp_ID=#{Emp_ID} and
+		Appointment_Date=#{Appointment_Date} and
+		Appointment_Time=#{Appointment_Time}
+	</select>
+
+	<select id="getAppointmentByCons" parameterType="pd" resultType="pd">
+		select * from FR_Work_Appointment where 1=1
+		<if test="patientid !=null and patientid!=''">
+			AND PatientID=#{patientid}
+		</if>
+		<if test="date !=null and date!=''">
+			AND Appointment_Date=#{date}
+		</if>
+	</select>
+	<!-- 计算队列取票编号 -->
+	<select id="countToGetQueueNo" parameterType="pd" resultType="Integer">
+		select count(*) from FR_Work_Appointment where
+		Appointment_Date=#{Appointment_Date}
+		AND Appointment_Time
+		&lt;=#{Appointment_Time}
+	</select>
+
+
+	<select id="countAppointByTimes" parameterType="pd" resultType="pd">
+		SELECT COUNT(*) as number,Emp_ID ,Appointment_Date
+		from
+		FR_Work_Appointment WHERE
+		Appointment_Date &gt;= #{fromDate} and
+		Appointment_Date &lt;= #{toDate}
+		and Emp_ID in
+		<foreach collection="emps" item="item" index="index" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		GROUP BY Emp_ID,Appointment_Date
+	</select>
+
+	<select id="getTodayAppointlistPage" parameterType="page"
+		resultType="pd">
+		select
+		a.*,s.Birthday,s.Sex,s.Age,s.MobileNO,s.WeChatNo,s.IDNumber,s.Profession,
+		s.MarriageState,s.Nation,s.Company,s.Address
+		from FR_Work_Appointment
+		a,FR_Sick_Patient s
+		WHERE a.Appointment_Date
+		=#{pd.appointmentDate}
+		AND
+		a.Appointment_Time &gt;= #{pd.startAppointTime}
+		AND a.Appointment_Time
+		&lt;= #{pd.endAppointTime} and AppointmentStatus=0
+		<if test="pd.name!=null and pd.name!=''">
+			and ( s.PatientName like '%'+#{pd.name}+'%' or s.NameSpell
+			like
+			'%'+#{pd.name}+'%' or s.MobileNO =#{pd.name})
+		</if>
+		AND a.PatientID=s.PatientID
+	</select>
+
+	<!-- 更新预约-wyp -->
+	<update id="update" parameterType="pd">
+		update FR_Work_Appointment set
+		OfficeID=#{OfficeID},
+		OfficeName=#{OfficeName},
+		Appointment_Type=#{Appointment_Type},
+		Emp_ID=#{Emp_ID},
+		E_Name=#{E_Name},
+		Doctor_Type=#{Doctor_Type},
+		Appointment_Date=#{Appointment_Date},
+		Appointment_Time=#{Appointment_Time},
+		Appointment_Con=#{Appointment_Con},
+		Appointment_Come=#{Appointment_Come},
+		Comment=#{Comment},
+		AppointDay=#{AppointDay}
+		where
+		Appointment_ID=#{Appointment_ID}
+	</update>
+
+	<update id="updateAppintStatus" parameterType="pd">
+		update
+		FR_Work_Appointment set
+		AppointmentStatus=#{AppointmentStatus}
+		where
+		Appointment_ID=#{Appointment_ID}
+	</update>
+
+	<!-- 新增预约-wyp -->
+	<insert id="save">
+		insert into FR_Work_Appointment(
+		Appointment_ID,PatientID,PatientName,OfficeID,OfficeName,Appointment_Type,Emp_ID,
+		E_Name,Doctor_Type,Appointment_Date,Appointment_Time,Appointment_Con,Appointment_Come,Comment,
+		Appointment_Code,AppointmentStatus,CreateDateTime,AppointDay
+		)values(
+		#{Appointment_ID},#{PatientID},#{PatientName},#{OfficeID},#{OfficeName},#{Appointment_Type},#{Emp_ID},
+		#{E_Name},#{Doctor_Type},#{Appointment_Date},#{Appointment_Time},#{Appointment_Con},#{Appointment_Come},
+		#{Comment},#{Appointment_Code},#{AppointmentStatus},#{CreateDateTime},#{AppointDay}
+		)
+	</insert>
+
+	<delete id="delete">
+		delete from FR_Work_Appointment where
+		Appointment_ID=#{Appointment_ID}
+	</delete>
+
+	<!-- 根据病人id、预约状态 查询 预约 信息 cwh -->
+	<select id="getAppointmentByPIDAndStatus" parameterType="pd"
+		resultType="pd">
+		select *from FR_Work_Appointment where PatientID=#{PatientID}
+		<if test="AppointmentStatus!=null">
+			AND AppointmentStatus=#{AppointmentStatus}
+		</if>
+		<if test="nowDate !=null and nowDate !=''">
+			AND Appointment_Date &gt;=#{nowDate}
+		</if>
+		ORDER BY CreateDateTime DESC
+	</select>
+	<!-- 根据病人id查询 历史挂号 cwh -->
+	<select id="getAppHistoryByPIDAndStatus" parameterType="pd"
+		resultType="pd">
+		select *from FR_Work_Appointment where PatientID=#{PatientID}
+		<if test="AppointmentStatus !=null and AppointmentStatus2 !=null">
+			AND (AppointmentStatus=#{AppointmentStatus} OR
+			AppointmentStatus=#{AppointmentStatus2})
+		</if>
+		ORDER BY CreateDateTime DESC
+	</select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>		

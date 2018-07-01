@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="DepartmentMapper">
+	
+		<!-- 查询科室类别（工作单位） -->
+		<select id="selectAllWorkUnit" resultType="pd">
+			select *from FR_WorkUnit where Status=0
+		</select>
+		
+		<!-- 查询对应医院下第一级科室 cwh-->
+		<select id="selectDepartmentByWorkUnitID" parameterType="pd" resultType="pd">
+			select *from FR_Office where WorkUnitID=#{workUnitID} and Status=0 and OfficeType=1
+		</select>
+		<!-- 查询科室下二级科室 cwh -->
+		<select id="selectWorkPositionByOfficeID" parameterType="pd" resultType="pd">
+			select *from FR_WorkPosition where OfficeID=#{officeID} and Status=0
+		</select>
+		
+		<!-- 查询对应科室下医生(一级科室) cwh -->
+		<select id="selectEmpByOfficeID" parameterType="pd" resultType="pd">
+			select *from FR_Emp where OfficeID=#{officeID} and Status=0 and Is_Doctor=1
+		</select>
+		<!-- 查询对应科室下医生总数(一级科室) cwh -->
+		<select id="selectEmpTotalByOfficeID" parameterType="pd" resultType="int">
+			select count(*) from FR_Emp where OfficeID=#{officeID} and Status=0 and Is_Doctor=1
+		</select>
+		
+		<!-- 查询对应科室下医生(二级科室) cwh -->
+		<select id="selectEmpByWorkPositionID" parameterType="pd" resultType="pd">
+			select *from FR_Emp where WorkPositionID=#{workPositionID} and Status=0 and Is_Doctor=1
+		</select>
+		<!-- 查询对应科室下医生总数(二级科室) cwh -->
+		<select id="selectEmpTotalByWorkPositionID" parameterType="pd" resultType="int">
+			select count(*) from FR_Emp where WorkPositionID=#{workPositionID} and Status=0 and Is_Doctor=1
+		</select>
+		
+		<!-- 根据名称模糊查询 科室 office 一级科室 -->
+		<select id="getOfficeByName" parameterType="pd" resultType="pd">
+			select *from FR_Office where WorkUnitID=#{workUnitID} and OfficeName LIKE '%'+#{keyword}+'%' and Status=0 and OfficeType=1
+		</select>
+		<!-- 根据名称模糊查询科室总数量 office 一级科室 -->
+		<select id="getOfficeTotalByName" parameterType="pd" resultType="int">
+			select count(*) from FR_Office where WorkUnitID=#{workUnitID} and OfficeName LIKE '%'+#{keyword}+'%' and Status=0 and OfficeType=1
+		</select>
+		
+		<!-- 根据名称模糊查询科室    二级科室 cwh-->
+		<select id="getWorkPositionByName" parameterType="pd" resultType="pd">
+			select WP.*
+			from FR_Office O,FR_WorkPosition WP
+			where O.OfficeID=WP.OfficeID
+				and O.WorkUnitID=#{workUnitID}
+				and WP.WorkPositionName LIKE '%'+#{keyword}+'%'
+				and WP.Status=0
+				and O.Status=0
+				and O.OfficeType=1
+		</select>
+		<!-- 根据名称模糊查询科室 总数量  二级科室 cwh -->
+		<select id="getWorkPositionTotalByName" parameterType="pd" resultType="int">
+			select count(*)
+			from FR_Office O,FR_WorkPosition WP
+			where O.OfficeID=WP.OfficeID
+				and O.WorkUnitID=#{workUnitID}
+				and WP.WorkPositionName LIKE '%'+#{keyword}+'%'
+				and WP.Status=0
+				and O.Status=0
+				and O.OfficeType=1
+		</select>
+		<!-- 根据名字模糊查询医生 -->
+		<select id="getEmpByName" parameterType="pd" resultType="pd">
+			select *from FR_Emp where E_Name LIKE '%'+#{keyword}+'%' or NameSpell LIKE '%'+#{keyword}+'%'
+			and WorkUnitID=#{workUnitID} 
+			and Status=0 
+			and Is_Doctor=1
+		</select>
+		<!--根据名字模糊查询医生 总数量  -->
+		<select id="getEmpTotalByName" parameterType="pd" resultType="int">
+			select count(*) from FR_Emp where E_Name LIKE '%'+#{keyword}+'%' or NameSpell LIKE '%'+#{keyword}+'%'
+			and WorkUnitID=#{workUnitID} 
+			and Status=0 
+			and Is_Doctor=1
+		</select>
+		
+		
+		
+	</mapper>

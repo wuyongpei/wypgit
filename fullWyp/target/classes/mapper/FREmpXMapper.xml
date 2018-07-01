@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="FREmpXMapper">
+
+	<!-- 换皮肤 -->
+	<update id="setSKIN" parameterType="pd" flushCache="false">
+		update FR_Emp
+		set
+		Skin = #{skin}
+		where Emp_Name = #{username}
+	</update>
+
+	<!-- 判断用户名和密码 -->
+	<select id="getUserInfo" parameterType="pd" resultType="pd"
+		useCache="false"><!-- insert update delete (flushCache="true/false") -->
+		select * from FR_Emp
+		where 1=1
+		<if test="Emp_Name != null and Pass_Word != null">
+			and (
+			(Emp_Name = #{Emp_Name} and Pass_Word = #{Pass_Word})
+			or
+			(Email = #{Emp_Name} and Pass_Word = #{Pass_Word})
+			)
+		</if>
+		<if test="Emp_ID != null and Emp_ID != ''">
+			and (Emp_ID = #{Emp_ID})
+		</if>
+	</select>
+   
+    <!--根据院所获取有效医生对象  -->
+    <select id="getCanUserEmpByUnitIDlistPage" parameterType="page" resultType="pd">
+      select * from FR_Emp
+      where Status=0 AND Is_Doctor=1  
+      AND WorkUnitID =#{pd.workUnitID} 
+      <if test="pd.dockey!='' and pd.dockey!=null">
+       AND (
+         E_Name like '%'+#{pd.dockey}+'%'
+         or
+         NameSpell like '%'+#{pd.dockey}+'%'
+       )
+      </if>
+    </select>
+   
+	<!-- 存入IP -->
+	<update id="saveIP" parameterType="pd" flushCache="false">
+		update FR_Emp
+		set
+		Ip = #{IP}
+		where
+		Emp_Name = #{username}
+	</update>
+
+
+	<!-- 通过USERNAME获取数据 -->
+	<select id="findByUId" parameterType="pd" resultType="pd"
+		useCache="false">
+		select
+		Emp_ID,
+		Emp_Name,
+		Pass_Word,
+		E_Name,
+		Rights,
+		Role_ID,
+		Last_Login,
+		Ip,
+		Status,
+		BZ,
+		Skin,
+		Email,
+		Phone,
+		BirthDay,
+		HireDate,
+		ID_Num,
+		Sex
+		from
+		FR_Emp
+		where
+		Emp_Name = #{USERNAME}
+	</select>
+
+	<select id="emplistPage" parameterType="page" resultType="pd"
+		useCache="false">
+		select f.Emp_ID,
+		f.Emp_Name,
+		f.Pass_Word,
+		f.E_Name,
+		f.Last_Login,
+		f.Sex,
+		f.Age,
+		f.Email,
+		f.Phone,
+		f.BirthDay,
+		f.HireDate,
+		f.ID_Num,
+		f.Comment,
+		f.Status,
+		f.OfficeName,
+		f.WorkPositionName,
+		f.WorkUnitName,
+		f.Doctor_Type,
+		r.Role_ID,
+		r.Role_Name,
+		d.DictionaryName
+		from FR_Emp
+		f,FR_Role r, FR_Dictionary d
+		WHERE
+		f.Role_ID =r.Role_ID AND
+		d.DictionaryID=f.DoctorPosition
+		<if test="pd.emp_Name !=null and pd.emp_Name!=''">
+			and f.Emp_Name like '%'+#{pd.emp_Name}+'%'
+		</if>
+	</select>
+
+	<select id="getEmpByID" parameterType="String" resultType="pd"
+		useCache="false">
+		select * from FR_Emp
+		where Emp_ID = #{emp_ID}
+	</select>
+
+	<select id="empschullistPage" parameterType="page" resultType="pd"
+		useCache="false">
+		select Emp_ID , E_Name from FR_Emp
+		<where>
+			WorkUnitID=#{pd.wuid} AND Status =0 AND Doctor_Type IS NOT NULL AND
+			Doctor_Type !=''
+			<if test="pd.officeID !=null and pd.officeID !=''">
+				And OfficeID=#{pd.officeID}
+			</if>
+			<if test="pd.doctorName !=null and pd.doctorName !=''">
+				And Emp_ID=#{pd.doctorName}
+			</if>
+
+		</where>
+	</select>
+
+	<select id="getEmpsList" parameterType="pd" resultType="pd">
+		select Emp_ID , E_Name , OfficeID from FR_Emp
+		<where>
+			WorkUnitID=#{wuid} AND Status =0 AND Doctor_Type IS NOT NULL AND
+			Doctor_Type !=''
+			<!-- <if test="officeID !=null and officeID!=''"> -->
+			<!-- And OfficeID=#{officeID} -->
+			<!-- </if> -->
+		</where>
+	</select>
+
+
+	<!-- 根据科室与预约时间获取可预约的医生 -->
+	<select id="getEmpBydate" parameterType="pd" resultType="pd">
+		select DISTINCT e.Emp_ID , e.E_Name ,e.Doctor_Type from FR_Emp
+		e,FR_Work_Appoint_Time s
+		where
+		e.WorkUnitID=#{wuid} and
+		e.OfficeID=#{OfficeID} and e.Status =0 and
+		s.DutyDate=#{Appointment_Date}
+		<if test="Doctor_Type !=null and Doctor_Type!=''">
+			And e.Doctor_Type=#{Doctor_Type}
+		</if>
+		and e.Emp_ID=s.DocTorID
+	</select>
+
+	<select id="getEmpsPage" parameterType="pd" resultType="pd">
+		select top ${pageSize} Emp_ID,E_Name from FR_Emp
+		<where>
+			WorkUnitID=#{wuid} AND Status =0 AND Doctor_Type IS NOT NULL AND
+			Doctor_Type !=''
+			<if test="officeID !=null and officeID !=''">
+				And OfficeID=#{officeID}
+			</if>
+			<if test="doctorName !=null and doctorName !=''">
+				And Emp_ID=#{doctorName}
+			</if>
+			<if test="pageStart!=null and pageStart!='0'">
+				and Emp_ID not in(select top ${pageStart} Emp_ID from FR_Emp
+				<where>
+					WorkUnitID=#{wuid} AND Status =0 AND Doctor_Type IS NOT NULL AND
+					Doctor_Type !=''
+					<if test="officeID !=null and officeID !=''">
+						And OfficeID=#{officeID}
+					</if>
+					<if test="doctorName !=null and doctorName !=''">
+						And Emp_ID=#{doctorName}
+					</if>
+				</where>
+				)
+			</if>
+		</where>
+	</select>
+	
+	<select id="getEmpsLength" parameterType="pd" resultType="java.lang.Integer">
+		select count(Emp_ID) from FR_Emp
+		<where>
+			WorkUnitID=#{wuid} AND Status =0 AND Doctor_Type IS NOT NULL AND
+			Doctor_Type !=''
+			<if test="officeID !=null and officeID !=''">
+				And OfficeID=#{officeID}
+			</if>
+			<if test="doctorName !=null and doctorName !=''">
+				And Emp_ID=#{doctorName}
+			</if>
+		</where>
+	</select>
+
+	<insert id="saveEmp" parameterType="pd">
+		insert into FR_EMP(
+		Emp_ID,
+		Emp_Name,
+		BirthDay,
+		Pass_Word,
+		HireDate,
+		E_Name,
+		NameSpell,
+		ID_Num,
+		Sex,
+		WorkUnitID,
+		Age,
+		OfficeID,
+		Phone,
+		WorkPositionID,
+		Email,
+		Status,
+		Doctor_Type,
+		Role_ID,
+		Comment,
+		WorkUnitName,
+		WorkPositionName,
+		OfficeName,
+		DoctorPosition,
+		Is_Doctor
+		)values(
+		#{empId},
+		#{empName},
+		#{birthDay},
+		#{password},
+		#{hireDate},
+		#{eName},
+		#{nameSpell},
+		#{iDNum},
+		#{Sex},
+		#{workUnitID},
+		#{age},
+		#{officeID},
+		#{phone},
+		#{workPositionID},
+		#{email},
+		#{Status},
+		#{Doctor_Type},
+		#{role_id},
+		#{comment},
+		#{WorkUnitName},
+		#{WorkPositionName},
+		#{OfficeName},
+		#{doctorPosition},
+		#{isDoctor}
+		)
+
+	</insert>
+
+	<delete id="deleteEmp" parameterType="String">
+		delete from FR_EMP
+		where
+		Emp_ID=#{emp_ID}
+	</delete>
+
+
+
+	<update id="editEmp" parameterType="pd">
+		update FR_EMP set
+		Emp_Name=#{empName},
+		BirthDay=#{birthDay},
+		<if test="password!=null and password!=''">
+			Pass_Word=#{password},
+		</if>
+		HireDate=#{hireDate},
+		E_Name=#{eName},
+		Role_ID=#{role_id},
+		ID_Num=#{iDNum},
+		Sex=#{Sex},
+		WorkUnitID=#{workUnitID},
+		Age=#{age},
+		OfficeID=#{officeID},
+		Phone=#{phone},
+		WorkPositionID=#{workPositionID},
+		Email=#{email},
+		Status=#{Status},
+		Doctor_Type=#{Doctor_Type},
+		Comment=#{comment},
+		WorkUnitName=#{WorkUnitName},
+		WorkPositionName=#{WorkPositionName},
+		OfficeName=#{OfficeName},
+		DoctorPosition=#{doctorPosition},
+		Is_Doctor=#{isDoctor}, 
+		NameSpell =#{nameSpell}
+		where
+		Emp_ID=#{empID}
+	</update>
+</mapper>

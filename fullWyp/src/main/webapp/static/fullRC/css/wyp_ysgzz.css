@@ -1,0 +1,324 @@
+body {
+	width: 100%;
+	height: 100%;
+}
+
+* {
+	margin: 0px;
+	padding: 0px;
+}
+
+#bottom {
+	width: 100%;
+	margin-bottom: 50px;
+}
+
+#left {
+	background-color: #3DADA1;
+}
+
+#center {
+	background-color: #3DADA1;
+}
+
+div.td_first button, div.td_second button {
+	text-align: center;
+	width: 70px;
+	height: 30px;
+	color: grey;
+	text-decoration: none;
+	display: inline-block;
+	cursor: pointer;
+}
+
+div.td_first button:hover, div.td_second button:hover {
+	background-color: white;
+}
+
+.td_second {
+	text-align: right;
+}
+
+.td_first {
+	margin: 20px 0 30px 0;
+}
+
+.bottom_left_h4 {
+	line-height: 24px;
+	font-size: 18px !important;
+	color: #333;
+	font-family: "Helvetica Neue", Helvetica, "PingFang SC",
+		"Hiragino Sans GB", "Microsoft YaHei", 微软雅黑, Arial,
+		sans-serif !important;
+}
+
+.visit {
+	color: #E6E6FA;
+	font-size: small;
+	padding: 20px;
+}
+
+.row {
+	width: 100%;
+	margin: 0 !important;
+}
+
+.text {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.row_secend {
+	margin-top: 10px; color : white;
+	font-size: 22px;
+	font-weight: 900;
+	color: white;
+}
+
+.row_third {
+	display: inline-block;
+	margin: 20px 90px 0 0;
+}
+
+.row_four {
+	display: inline-block;
+	margin: 20px 0 0 0;
+}
+
+.row_five {
+	width: 90%;
+	color: black;
+	font-size: 1rew;
+	font-weight: 500;
+	text-align: center;
+	height: 60px;
+}
+
+.row_six {
+	text-align: center;
+	width: 100%;
+}
+
+div.row_six>input {
+	width: 70%;
+	height: 30px;
+}
+
+div.row_six>button {
+	border: none;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	cursor: pointer;
+	margin-bottom: 10px;
+}
+
+.p_btn{
+  background-color: rgb(65,178,166) !important;
+}
+.p_btn:hover{
+  background-color: #ccc !important;
+  color: #333 !important;
+}
+.btn-group>.btn{
+border-width: 1px !important;
+}
+
+/*phone*/
+@media screen and (max-width: 600px) {
+	#heading {
+		width: 100%;
+	}
+	#left, #right, #center {
+		margin: 10px 15px 10px 15px;
+	}
+	#bottom {
+		width: 100%;
+	}
+	#bottom_left, #bottom_right {
+		margin: 10px 15px 10px 15px;
+	}
+	.table_first {
+		border: 1px solid gainsboro;
+		width: 100%;
+	}
+	.table_second {
+		border: 1px solid #ddd;
+		width: 100%;
+		border-collapse: collapse;
+		color: #444;
+		font-family: "Helvetica Neue", Helvetica, "PingFang SC",
+			"Hiragino Sans GB", "Microsoft YaHei", 微软雅黑, Arial,
+			sans-serif !important;
+	}
+	table.table_second>thead>tr>td, table.table_second>tbody>tr>td {
+		padding: 10px;
+		border: 1px solid rgb(221, 221, 221);;
+		width: 50%;
+	}
+	.table_third {
+		word-break: break-word;
+		word-wrap: break-word;
+		margin: 20px 0 50px 0;
+		width: 100%;
+		border-collapse: collapse;
+		color: #444;
+		font-family: "Helvetica Neue", Helvetica, "PingFang SC",
+			"Hiragino Sans GB", "Microsoft YaHei", 微软雅黑, Arial,
+			sans-serif !important;
+	}
+	table.table_third>thead>tr>td, table.table_third>tbody>tr>td {
+		padding: 10px;
+		border: 1px solid rgb(221, 221, 221);
+		width: 12.5%;
+		text-align: center;
+		white-space: pre-wrap;
+	}
+	table.table_third>thead>tr>td>a {
+		font-weight: 700;
+		cursor: pointer;
+		color: #458ECE;
+		text-decoration: none;
+		word-wrap: break-word;
+	}
+}
+
+/*ipad*/
+@media only screen and (min-width: 600px) and (max-width: 850px) {
+	#heading {
+		width: 100%;
+		font-size: 0;
+	}
+	#left, #center {
+		width: 46%;
+		display: inline-block;
+		margin: 0px 2% 0px 2%;
+		vertical-align: top;
+	}
+	#right {
+		text-align: center;
+		margin-top: 10px;
+	}
+	#bottom_left, #bottom_right {
+		margin: 10px 15px 10px 15px;
+	}
+	.table_first {
+		border: 1px solid gainsboro;
+		width: 100%;
+	}
+	.table_second {
+		border: 1px solid #ddd;
+		width: 100%;
+		border-collapse: collapse;
+		color: #444;
+		font-family: "Helvetica Neue", Helvetica, "PingFang SC",
+			"Hiragino Sans GB", "Microsoft YaHei", 微软雅黑, Arial,
+			sans-serif !important;
+	}
+	table.table_second>thead>tr>td, table.table_second>tbody>tr>td {
+		padding: 10px;
+		border: 1px solid rgb(221, 221, 221);
+		width: 50%;
+	}
+	.table_third {
+		word-break: break-word;
+		word-wrap: break-word;
+		margin: 20px 0 50px 0;
+		width: 100%;
+		border-collapse: collapse;
+		color: #444;
+		font-family: "Helvetica Neue", Helvetica, "PingFang SC",
+			"Hiragino Sans GB", "Microsoft YaHei", 微软雅黑, Arial,
+			sans-serif !important;
+	}
+	table.table_third>thead>tr>td, table.table_third>tbody>tr>td {
+		padding: 10px;
+		border: 1px solid rgb(221, 221, 221);
+		width: 12.5%;
+		text-align: center;
+		white-space: pre-wrap;
+	}
+	table.table_third>thead>tr>td>a {
+		font-weight: 700;
+		cursor: pointer;
+		color: #458ECE;
+		text-decoration: none;
+		word-wrap: break-word;
+	}
+}
+
+/*computer*/
+@media only screen and (min-width: 850px) {
+	#heading, #buttom {
+		width: 100%;
+		font-size: 0;
+	}
+	#left, #center {
+		width: 25%;
+		display : inline-block;
+		margin: 0px 1% 0px 1%;
+		vertical-align: top;
+	}
+	#right {
+		width:44%;
+		display: inline-block;
+		margin: 0px 1% 0px 1%;
+		vertical-align: top;
+	}
+	#bottom_left, #bottom_right {
+		vertical-align: top;
+		display: inline-block;
+		margin: 10px 1% 10px 1%;
+	}
+	#bottom_left {
+		width: 30%;
+	}
+	#bottom_right {
+		width: 65%;
+	}
+	.visit {
+		color: #E6E6FA;
+		font-size: small;
+	}
+	.table_first {
+		width: 100%;
+	}
+	.table_second {
+		width: 100%;
+		border-collapse: collapse;
+		color: #444;
+		font-family: "Helvetica Neue", Helvetica, "PingFang SC",
+			"Hiragino Sans GB", "Microsoft YaHei", 微软雅黑, Arial,
+			sans-serif !important;
+	}
+	table.table_second>thead>tr>td, table.table_second>tbody>tr>td {
+		padding: 10px;
+		border: 1px solid rgb(221, 221, 221);
+		width: 50%;
+	}
+	.table_third {
+		word-break: break-word;
+		word-wrap: break-word;
+		margin: 20px 0 20px 0;
+		width: 100%;
+		border-collapse: collapse;
+		color: #444;
+		font-family: "Helvetica Neue", Helvetica, "PingFang SC",
+			"Hiragino Sans GB", "Microsoft YaHei", 微软雅黑, Arial,
+			sans-serif !important;
+	}
+	table.table_third>thead>tr>td, table.table_third>tbody>tr>td {
+		padding: 10px;
+		border: 1px solid rgb(221, 221, 221);
+		width: 12.5%;
+		text-align: center;
+		white-space: pre-wrap;
+	}
+	table.table_third>thead>tr>td>a {
+		font-weight: 700;
+		cursor: pointer;
+		color: #458ECE;
+		text-decoration: none;
+		word-wrap: break-word;
+	}
+}

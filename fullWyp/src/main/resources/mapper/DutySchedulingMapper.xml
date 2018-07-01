@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DutySchedulingMapper">
+
+	<!-- 根据empid 和 dateT -->
+	<select id="getSchedulingByCons" parameterType="pd" resultType="pd">
+		select * from FR_Duty_Scheduling where
+		Emp_ID=#{empid} AND DutyDate
+		=#{dateT}
+	</select>
+
+
+	<select id="getSchedulDataByDateCircle" parameterType="pd"
+		resultType="pd">
+		select * from FR_Duty_Scheduling Where
+		DutyDate
+		&gt;=#{startDay}
+		And DutyDate &lt;=#{endDay}
+	</select>
+
+	<select id="getSchedulRecordByCons" parameterType="pd"
+		resultType="pd">
+		select * from FR_Duty_Scheduling where
+		DutyDate
+		&gt;=#{startDate}
+		And DutyDate &lt;=#{endDate}
+		AND Emp_ID=#{empID}
+	</select>
+
+	<select id="getScheduls" parameterType="pd" resultType="pd">
+		select *
+		from FR_Duty_Scheduling where
+		DutyDate &gt;=#{startDate}
+		and
+		DutyDate &lt;= #{endDate}
+		and Emp_ID in
+		<foreach collection="Emp_ID" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+
+	</select>
+
+
+	<update id="updateSchedul" parameterType="pd">
+		update
+		FR_Duty_Scheduling set
+		DutyTypeID =#{DutyTypeID},
+		DutyTypeName
+		=#{DutyTypeName},
+		CreateDateTime =#{CreateDateTime}
+		where
+		Duty_ID
+		=#{Duty_ID}
+	</update>
+
+
+
+	<!-- 保存 -->
+	<insert id="saveSch" parameterType="pd">
+		insert into
+		FR_Duty_Scheduling(
+		Duty_ID,
+		Emp_ID,
+		E_Name,
+		CreateDateTime,
+		DutyDate,
+		DutyTypeID,
+		DutyTypeName,
+		ValueID,
+		SaveDay
+		)values(
+		#{Duty_ID},
+		#{Emp_ID},
+		#{E_Name},
+		#{CreateDateTime},
+		#{DutyDate},
+		#{DutyTypeID},
+		#{DutyTypeName},
+		#{ValueID},
+		#{SaveDay}
+		)
+	</insert>
+
+	<delete id="deleteSch" parameterType="pd">
+		delete from
+		FR_Duty_Scheduling
+		where Duty_ID =#{Duty_ID}
+	</delete>
+
+	<delete id="deleteSchByC" parameterType="pd">
+		delete from FR_Duty_Scheduling
+		where Emp_ID=#{Emp_ID} AND DutyDate=#{DutyDate}
+	</delete>
+
+	<delete id="deleteS" parameterType="pd">
+		delete from
+		FR_Duty_Scheduling
+		where
+		DutyDate &gt;=#{startDate}
+		And
+		DutyDate &lt;=#{endDate}
+		AND Emp_ID in
+		<foreach collection="Emp_ID" index="index" item="item" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+
+
+
+
+
+
+
+</mapper>

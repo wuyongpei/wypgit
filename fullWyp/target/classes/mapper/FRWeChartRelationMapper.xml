@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="FRWeChartRelationMapper">
+	
+	<!-- 绑定微信号表 cwh-->
+	<insert id="saveWeChartRelation" parameterType="pd">
+		insert into FR_WeChart_Relation
+		(
+		WeChartID,WeOpenID,Nickname,HeadImgUrl,CreateDateTime)
+		values(
+		#{weChartID},#{openID},#{nickName},#{headImgUrl},#{createDateTime}
+		)
+	</insert>
+	<!-- 微信保存 绑定就诊卡 cwh-->
+	<insert id="saveBindCard" parameterType="pd">
+		insert into FR_WeChart_Relation_Card
+		(
+		RelationID,CardNo,PatientName,WeChartID,IDNo,PhoneNo,PatientID
+		)values(
+		#{relationID},#{cardNo},#{patientName},#{weChartID},#{idNumber},#{phoneNumber},#{patientID}
+		)
+	</insert>
+	<!--微信绑定 创建病人档案 cwh -->
+	<insert id="saveFRSickPatient" parameterType="pd">
+		insert into FR_Sick_Patient
+		(
+		PatientID,PatientName,NameSpell,Sex,Birthday,Age,State,OperatorID,CreateDateTime,CardCode,CardType,IDNumber,MobileNO
+		)values(
+		#{patientID},#{patientName},#{nameSpell},#{sex},#{birthday},#{age},#{state},#{operatorID},#{createDateTime},#{cardNo},#{cardType},#{idNumber},#{phoneNumber}
+		)
+		
+	</insert>
+	
+	<!-- 根据openid查询微信是否已绑定 cwh -->
+	<select id="selectWeChartRelationByOpenID" parameterType="String" resultType="pd">
+		select *from FR_WeChart_Relation where WeOpenID=#{openID}
+	</select>
+	<!-- 根据weChartID查询是否有就诊卡 cwh-->
+	<select id="selectWeChartRCByweChartID" parameterType="String" resultType="pd">
+		select *from FR_WeChart_Relation_Card where WeChartID=#{weChartID}
+	</select>
+	<!-- 根据就诊卡号查询 微信就诊卡绑定  cwh-->
+	<select id="selectWeChartRCByCardNo" parameterType="pd" resultType="int">
+		select count(*) from FR_WeChart_Relation_Card where CardNo=#{medicalCard}
+	</select>
+	<!-- 根据openid查询就诊卡 cwh -->
+	<select id="selectWeChartRCByOpenID" parameterType="pd" resultType="pd">
+		select *
+		from FR_WeChart_Relation WR,FR_WeChart_Relation_Card WRC
+		where WR.WeChartID=WRC.WeChartID
+		and WR.WeOpenID=#{OpenID}
+	</select>
+	<!-- 根据身份证查询 微信就诊卡绑定 cwh -->
+	<select id="getWeChartRCByIDNo" parameterType="pd" resultType="int">
+		select count(*) from FR_WeChart_Relation_Card where IDNo=#{idNumber}
+	</select>
+	
+	
+	<!-- 解除就诊卡绑定 cwh -->
+	<delete id="removeBindCard" parameterType="pd" >
+		delete from FR_WeChart_Relation_Card where RelationID=#{RelationID}
+	</delete>
+	
+	
+	<!-- 统计病人档案总数cwh -->
+	<select id="getSumFromSickPatient" resultType="int">
+		select count(*) from FR_Sick_Patient where State=0
+	</select>
+	<!-- 根据手机号查询病人档案 cwh-->
+	<select id="getSickPatientByMobileNo" parameterType="pd" resultType="int">
+		select count(*) from FR_Sick_Patient where MobileNO=#{phoneNumber}
+	</select>
+	<!-- 根据身份证查询病人档案cwh -->	
+	<select id="selectSickPatientByIDNumber" parameterType="pd" resultType="pd">
+		select * from FR_Sick_Patient where IDNumber=#{idNumber}
+	</select>
+	<!-- 根据就诊卡号查询病人档案cwh -->
+	<select id="selectSickPatientByCardCode" parameterType="pd" resultType="pd">
+		select * from FR_Sick_Patient where CardCode=#{medicalCard}
+	</select>	
+	<!-- 修改病人档案手机号 cwh -->
+	<update id="updateSickPatientMobileNo" parameterType="pd">
+		update FR_Sick_Patient set
+		MobileNO=#{phoneNumber}
+		where PatientID=#{patientID}
+	</update>
+	
+		
+	</mapper>

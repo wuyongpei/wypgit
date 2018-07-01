@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+	<mapper namespace="MenuMapper">
+
+	<resultMap type="Menu" id="menuResultMap">
+		<id column="Menu_Id" property="menu_Id"/>
+		<result column="Menu_Name" property="menu_Name"/>
+		<result column="Menu_Url" property="menu_Url"/>
+		<result column="Parent_Id" property="parent_Id"/>
+		<result column="Menu_Order" property="menu_Order"/>
+		<result column="Menu_Icon" property="menu_Icon"/>
+		<result column="Menu_Type" property="menu_Type"/>
+		<result column="Menu_Level" property="menu_Level"/>
+		
+	</resultMap>
+	
+	<!-- ztree -->
+	<resultMap type="Menu" id="menuZtreeResultMap">
+	<id column="Menu_Id" property="menu_Id"/>
+	<result column="Menu_Name" property="menu_Name"/>
+	<result column="Menu_Url" property="menu_Url"/>
+	<result column="Parent_Id" property="parent_Id"/>
+	<result column="Menu_Order" property="menu_Order"/>
+	<result column="Menu_Icon" property="menu_Icon"/>
+	<result column="Menu_Type" property="menu_Type"/>
+		<result column="Menu_Level" property="menu_Level"/>
+	<result column="target" property="target"></result>
+</resultMap>
+  
+    <select id="findMaxId" parameterType="pd" resultType="pd">
+		select MAX(Menu_Id) MID FROM FR_Menu
+	</select>
+  
+  
+    <select id="listSubMenuByParentId" parameterType="String" resultMap="menuResultMap">
+		select  * from FR_Menu
+		where Parent_Id = #{parentId} and Status=0 order by Menu_order 
+	</select>
+    <select id="listSubMenuByParentIdAll" parameterType="String" resultMap="menuResultMap">
+		select  * from FR_Menu
+		where Parent_Id = #{parentId}  order by Menu_order 
+	</select>
+   
+   <select id="listAllParentMenu" resultMap="menuResultMap">
+		select * from FR_Menu 
+		where Parent_Id = '0' and Status=0 order by Menu_order 
+	</select>
+	
+   <select id="listAllParentMenuAll" resultMap="menuResultMap">
+		select * from FR_Menu 
+		where Parent_Id = '0' order by Menu_order 
+	</select>
+
+   
+   <update id="editicon" parameterType="Menu">
+		update FR_Menu set 
+			Menu_Icon=#{menu_icon}
+		where Menu_Id=#{menu_Id}
+	</update>
+  
+  	<select id="getMenuById" parameterType="pd" resultType="pd">
+		select  Menu_Id,
+		 		Menu_Name,
+		 		Menu_Url,
+		 		Parent_Id,
+		 		Menu_Order,
+		 		Menu_Type,
+		 		Menu_Level
+		 from FR_Menu 
+		 where Menu_Id=#{menu_Id}
+	</select>
+  
+    
+    	
+	<update id="editType" parameterType="Menu">
+		update FR_Menu set 
+			Menu_Type=#{Menu_Type}
+		where Parent_Id=#{Parent_Id}
+	</update>
+  
+   	<update id="updateMenu" parameterType="pd">
+		update FR_Menu set 
+			Menu_Name =#{Menu_Name},
+			Menu_Url  =#{Menu_Url} ,
+			Parent_Id =#{Parent_Id},
+			Menu_Order=#{Menu_Order},
+			Menu_Type =#{Menu_Type},
+			Status =#{Status}
+		where 
+			Menu_Id=#{Menu_Id}
+	</update>
+  
+  
+    <delete id="deleteMenuById" parameterType="String">
+		delete from FR_Menu 
+		where Menu_Id=#{menu_Id} 
+		or Parent_Id=#{menu_Id}
+	</delete>
+	
+	
+	<insert id="insertMenu" parameterType="Menu">
+		insert into FR_Menu (
+			 Menu_Id,
+		     Menu_Name,
+		     Menu_Url,
+		 	 Parent_Id,
+		 	 Menu_Order,
+		 	 Menu_Type,
+		 	 Menu_Level,
+		 	 Status
+		) values (
+			#{menu_Id},
+			#{menu_Name},
+			#{menu_Url},
+			#{parent_Id},
+			#{menu_Order},
+			#{menu_Type},
+			#{menu_Level},
+			#{status}
+		)
+	</insert>
+	
+</mapper>

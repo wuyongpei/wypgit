@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SickPatientMapper">
+
+
+	<select id="getPatientByName" parameterType="String" resultType="pd">
+		select * from FR_Sick_Patient where PatientName like
+		'%'+#{PatientName}+'%' or NameSpell like '%'+#{PatientName}+'%'
+	</select>
+
+	<!-- 根据名字，登记时间获取患者 -->
+	<select id="sicklistPage" parameterType="page" resultType="pd"
+		useCache="false">
+		select * from FR_Sick_Patient where State=0
+		<if test="pd.fromTime!=null and pd.fromTime!=''">
+			and CreateDateTime &gt;=
+			#{pd.fromTime}
+		</if>
+		<if test="pd.toTime!=null and pd.toTime!=''">
+			and CreateDateTime &lt;=
+			#{pd.toTime}
+		</if>
+		<if test="pd.PatientName!=null and pd.PatientName!=''">
+			and PatientName like
+			'%'+#{pd.PatientName}+'%'
+		</if>
+	</select>
+
+	<select id="getPatientByCons" parameterType="pd" resultType="pd">
+		select * from FR_Sick_Patient where 1=1
+		<if test="cardno!=null and cardno!=''">
+			AND CardCode =#{cardno}
+		</if>
+		<if test="phone !=null and phone !=''">
+			AND MobileNO =#{phone}
+		</if>
+		<if test="idNum !=null and idNum !=''">
+			AND IDNumber =#{idNum}
+		</if>
+	</select>
+
+	<select id="registerlistPage" parameterType="page" resultType="pd"
+		useCache="false">
+		select * from FR_Sick_Patient where State=0
+		<if test="pd.fromTime!=null and pd.fromTime!=''">
+			and CreateDateTime &gt;=
+			#{pd.fromTime}
+		</if>
+		<if test="pd.toTime!=null and pd.toTime!=''">
+			and CreateDateTime &lt;=
+			#{pd.toTime}
+		</if>
+		<if test="pd.PatientName!=null and pd.PatientName!=''">
+			and( PatientName like '%'+#{pd.PatientName}+'%' or
+			NameSpell like '%'+#{pd.PatientName}+'%' or
+			MobileNO=#{pd.PatientName})
+		</if>
+	</select>
+
+	<select id="getByPhoneOrCard" parameterType="String" resultType="pd">
+		select * from FR_Sick_Patient where MobileNO=#{cardCode} or
+		CardCode=#{cardCode}
+	</select>
+
+	<update id="updateByID" parameterType="pd">
+		update FR_Sick_Patient set
+		PatientName=#{PatientName},
+		Birthday=#{Birthday},
+		Age=#{Age},
+		MobileNO=#{MobileNO},
+		CardCode=#{CardCode},
+		CardType=#{CardType},
+		Nation=#{Nation},
+		Email=#{Email},
+		MN_CardNO=#{MN_CardNO},
+		InsuranceNO=#{InsuranceNO},
+		IDNumber=#{IDNumber},
+		Zip=#{Zip},
+		Company=#{Company},
+		Profession=#{Profession},
+		WeChatNo=#{WeChatNo},
+		MarriageState=#{MarriageState},
+		Comment=#{Comment},
+		LinkmanRelation=#{LinkmanRelation},
+		Linkman=#{Linkman},
+		LinkmanPhone=#{LinkmanPhone},
+		LinkmanAddress=#{LinkmanAddress},
+		Sex=#{Sex},
+		Address=#{Address}
+		where PatientID=#{PatientID}
+	</update>
+
+	<insert id="savePatient" parameterType="pd">
+		insert FR_Sick_Patient(
+		PatientID,PatientCode,NameSpell,SettleType,State,OperatorID,CreateDateTime,ArchivesNo,
+		Password,
+		PatientName,Birthday,Age,MobileNO,CardCode,CardType,Nation,Email,MN_CardNO,
+		InsuranceNO,IDNumber,Zip,Company,Profession,WeChatNo,MarriageState,Comment,LinkmanRelation,
+		Linkman,LinkmanPhone,LinkmanAddress,Sex,Address
+		)values(
+		#{PatientID},#{PatientCode},#{NameSpell},#{SettleType},#{State},#{OperatorID},
+		#{CreateDateTime},#{ArchivesNo},#{Password},
+		#{PatientName},#{Birthday},#{Age},#{MobileNO},#{CardCode},#{CardType},#{Nation},#{Email},
+		#{MN_CardNO},#{InsuranceNO},#{IDNumber},#{Zip},#{Company},#{Profession},#{WeChatNo},
+		#{MarriageState},
+		#{Comment},#{LinkmanRelation},#{Linkman},#{LinkmanPhone},#{LinkmanAddress},#{Sex},#{Address}
+		)
+	</insert>
+
+	<delete id="deletePatient" parameterType="String">
+		delete from
+		FR_Sick_Patient where PatientID=#{PatientID}
+	</delete>
+
+
+</mapper>

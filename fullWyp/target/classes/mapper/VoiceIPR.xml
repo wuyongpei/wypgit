@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="VoiceIPR">
+   
+    <!-- 通过科室ID获取相关设备ip地址 -->
+   <select id="getVoiceControlIP" parameterType="Integer" resultType="pd">
+     select * FROM FR_Voice_IP_R WHERE OfficeID=#{oficeID}
+   </select>
+
+
+
+
+</mapper>

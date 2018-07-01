@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="AppointTimeMapper">
+	
+	
+	
+	<select id="getAppointTimeByDateCircle" parameterType="pd" resultType="pd">
+	  select * from FR_Work_Appoint_Time where
+        DutyDate &gt;=#{startDay} 
+	    And DutyDate &lt;=#{endDay}	  
+	</select>
+	
+	<!-- 按医生id查询预约时间   大于当前时间  cwh-->
+	<select id="getAppointTimeByDoctorID" parameterType="pd" resultType="pd">
+		select *from FR_Work_Appoint_Time where DoctorID=#{Emp_ID} and 
+		DutyDate &gt;=#{nowDate}
+		ORDER BY DutyDate,AppointEndTime
+	</select>
+	<!-- 根据预约时间段id查询预约时间 cwh -->
+	<select id="getAppointTimeByAppointNoID" parameterType="pd" resultType="pd">
+		select *from FR_Work_Appoint_Time where AppointNoID=#{appointNoID}
+	</select>
+	<!-- 根据科室id和预约日期查询 预约信息 cwh -->
+	<select id="getAppointTimeByOIDandDD" parameterType="pd" resultType="pd">
+		select WAT.*,E.OfficeName,E.Emp_ID,E.DoctorPosition
+		from FR_Work_Appoint_Time WAT,FR_Emp E
+		where WAT.DocTorID=E.Emp_ID
+			and WAT.DutyDate=#{dutyDate}
+			and E.OfficeID=#{officeID}
+		ORDER BY WAT.AppointEndTime,WAT.DocTorID
+	</select>
+	
+	<select id="getAppointTimeByCons" parameterType="pd" resultType="pd">
+	  select * from FR_Work_Appoint_Time where
+      DocTorID=#{Emp_ID} AND DutyDate=#{DutyDate} order by AppointStartTime
+	</select>
+	
+	
+	<delete id="deleteByEAndD" parameterType="pd">
+	  delete from FR_Work_Appoint_Time
+	  where DocTorID =#{DocTorID} AND DutyDate=#{DutyDate}
+	</delete>
+	
+	
+	<insert id="saveOPAppointTime" parameterType="pd">
+	   insert  into FR_Work_Appoint_Time(
+	      AppointNoID,
+	      AppointStartTime,
+	      AppointEndTime,
+	      DocTorID,
+	      DocTorName,
+	      TimeInterval,
+	      SaveDay,
+	      DutyDate,
+	      ValueID,
+	      AppointTickets
+	   )values(
+	      #{AppointNoID},
+	      #{AppointStartTime},
+	      #{AppointEndTime},
+	      #{DocTorID},
+	      #{DocTorName},
+	      #{TimeInterval},
+	      #{SaveDay},
+	      #{DutyDate},
+	      #{ValueID},
+	      #{AppointTickets}
+	    )
+	</insert>
+	
+	
+	
+	
+	
+	</mapper>

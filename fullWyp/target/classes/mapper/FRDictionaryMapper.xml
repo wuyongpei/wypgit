@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	<mapper namespace="FRDictionaryMapper">
+	
+	<!-- 加载字典列表   0父类别 -->
+	<select id="getDictionaryTypeList" resultType="pd">
+		select *from FR_Dictionary where DictionaryType=0
+		ORDER BY OrderIndex
+	</select>
+	<!-- 根据字典类型获取对应字典详细列表 -->
+	<select id="getDictionaryListByType" parameterType="java.lang.Integer" resultType="pd">
+		select *
+		from FR_Dictionary FRD where FRD.PatientID =#{dictionaryid}
+		ORDER BY FRD.OrderIndex
+	</select>
+	<!-- 根据字典id查询字典名称 -->
+	<select id="getDictionaryById" parameterType="java.lang.Integer" resultType="pd">
+		select *
+		from FR_Dictionary where DictionaryID=#{dictionaryid}
+	</select>
+	
+	<select id="getDictionaryNameByCons" parameterType="pd" resultType="String">
+	   select f.DictionaryName from FR_Dictionary f, FR_Dictionary d 
+     WHERE d.DictionaryName=#{dictname} and d.DictionaryID = f.PatientID 
+       and f.DictionaryCode =#{dictcode}
+	</select>
+	
+	
+	
+	<!-- 根据父名称查询子字典名称 -->
+	<select id="getDictionaryByName" parameterType="String" resultType="pd">
+		select s1.DictionaryID,s1.DictionaryCode ,s1.DictionaryName
+		from FR_Dictionary s1,FR_Dictionary s2 where s1.PatientID=s2.DictionaryID and s2.DictionaryName=#{DictionaryName}
+	</select>
+	
+	
+	<!-- 新增字典 -->
+	<insert id="insertDictionary" parameterType="com.yangzi.fullR.entity.Dictionary">
+		insert into FR_Dictionary(
+			DictionaryCode,
+			DictionaryName,
+			DictionaryType,
+			OrderIndex,
+			SimpleCode,
+			Comment,
+			PatientID
+		)values(
+			#{dictionaryCode},
+			#{dictionaryName},
+			#{dictionaryType},
+			#{orderIndex},
+			#{simpleCode},
+			#{comment},
+			#{patientID}
+		)
+	</insert>
+	<!-- 修改字典 -->
+	<update id="updateDictionary" parameterType="com.yangzi.fullR.entity.Dictionary">
+		update FR_Dictionary set
+			DictionaryCode =#{dictionaryCode},
+			DictionaryName =#{dictionaryName},
+			OrderIndex =#{orderIndex},
+			SimpleCode =#{simpleCode},
+			Comment =#{comment}
+		where 
+			DictionaryID =#{dictionaryID}
+	</update>
+	<!-- 删除字典 -->
+	<delete id="deleteDictionary" parameterType="java.lang.Integer">
+		delete from FR_Dictionary where DictionaryID=#{dictionaryid}
+	</delete>
+
+	</mapper>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CallListMapper">
+
+   <!-- 根据条件获取队列数据 -->
+  <select id="getCallListByCons" parameterType="pd" resultType="pd">
+    select * from FR_Call_List where 1=1
+    <if test="empID!=null and empID!=''">
+    AND Emp_ID =#{empID} 
+    </if>
+    <if test="appointmentDate !=null and appointmentDate !=''">
+    AND Appointment_Date=#{appointmentDate}
+    </if>
+    <if test="status !=null and status !=''">
+    AND Status = #{status} 
+    </if>
+  </select> 
+  
+  <!-- 呼叫下一位使用 -->
+  <select id="getNextOne" parameterType="pd" resultType="pd">
+    select TOP(1) * FROM FR_Call_List WHERE
+     (Call_Time IS null OR Call_Time='')
+    <if test="empID !=null and empID !=''">
+       AND Emp_ID=#{empID}
+    </if>
+    <if test="appointmentDate !=null and appointmentDate !=''">
+       AND Appointment_Date=#{appointmentDate}
+    </if>
+    <if test="status !=null and status !=''">
+       AND Status=#{status}
+    </if>
+    
+    ORDER BY Call_Time ASC
+  </select>
+  
+  <!-- 获取当前呼叫人 -->
+  <select id="getNowOne" parameterType="pd" resultType="pd">
+    select TOP(1) * FROM FR_Call_List WHERE
+       (Call_Time IS NOT null AND Call_Time !='')
+    <if test="empID !=null and empID !=''">
+       AND Emp_ID=#{empID}
+    </if>
+    <if test="appointmentDate !=null and appointmentDate !=''">
+       AND Appointment_Date=#{appointmentDate}
+    </if>
+    ORDER BY Call_Time DESC
+  </select>
+  
+  <!-- 条件统计 -->
+  <select id="countByStatusAndMySelf" parameterType="pd" resultType="Integer">
+      select count(*) from FR_Call_List where 1=1
+      <if test="empID !=null and empID !=''">
+       AND Emp_ID=#{empID}
+    </if>
+    <if test="appointmentDate !=null and appointmentDate !=''">
+       AND Appointment_Date=#{appointmentDate}
+    </if>
+    <if test="status !=null and status !=''">
+       AND Status=#{status}
+    </if>
+    <if test="hasTime !=null and hasTime !=''">
+       AND (Call_Time IS NOT null AND Call_Time!='')
+    </if>
+  </select>
+  
+  <select id="getCallByID" parameterType="String" resultType="pd">
+    select * from FR_Call_List where Queue_ID=#{queueID}
+  </select>
+  
+
+
+  <insert id="insertQueue" parameterType="com.yangzi.fullR.entity.vo.CallListVo">
+    insert into FR_Call_List(
+    Queue_ID,
+    Queue_Code,
+    Emp_ID,
+    E_Name,
+    Appointment_Time,
+    Appointment_Type,
+    Call_Time,
+    PatientID,
+    PatientName,
+    Status,
+    Appointment_Date,
+    MN_CardNO
+    )values(
+    #{queueID},
+    #{queueCode},
+    #{empID},
+    #{empName},
+    #{appointmentTime},
+    #{appointmentType},
+    #{callTime},
+    #{patientID},
+    #{patientName},
+    #{status},
+    #{appointmentDate},
+    #{mnCardNO}
+    )
+  </insert>
+  
+  <update id="updatgeQueue" parameterType="pd">
+    update FR_Call_List set
+     <if test="status !=null and status!=''">
+      Status =#{status}
+     </if>
+     <if test="callTime!=null and callTime!=''">
+      Call_Time=#{callTime}
+     </if>
+    where Queue_ID=#{queueID}
+  </update>
+  
+  <update id="updateQueUeC" parameterType="pd">
+    update FR_Call_List set
+     Queue_Code=#{Queue_Code},
+     Emp_ID=#{Emp_ID},
+     E_Name=#{E_Name},
+     Appointment_Time=#{Appointment_Time},
+     Appointment_Type=#{Appointment_Type},
+     Call_Time=#{Call_Time},
+     PatientID=#{PatientID},
+     PatientName=#{PatientName},
+     Status=#{Status},
+     Appointment_Date=#{Appointment_Date},
+     MN_CardNO=#{MN_CardNO},
+     VoiceName=#{VoiceName}
+     WHERE Queue_ID=#{Queue_ID}
+  </update>
+
+
+
+
+
+
+
+
+</mapper>
